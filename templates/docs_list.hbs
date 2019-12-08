@@ -1,0 +1,38 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Название документа</th>
+      <th scope="col">Обновлен</th>
+      <th scope="col">Создан</th>
+      <th scope="col">Статус обработки</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#each documents}}
+        <tr>
+            <td>{{@index}}</td>
+            <td>{{this.name}}</td>
+            <td>
+                {{this.updatedAt}}
+            </td>
+            <td>
+                {{this.createdAt}}
+            </td>
+            <td>
+                {{#if this.handled}}
+                    <p>
+                        Обработан
+                    </p>
+                {{else}}
+                    <p>
+                        <a href="/handle/{{this._id}}" class="btn btn-primary">
+                            Обработать
+                        </a>
+                    </p>
+                {{/if}}
+            </td>
+        </tr>
+      {{/each}}
+  </tbody>
+</table>

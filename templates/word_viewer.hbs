@@ -1,0 +1,59 @@
+<div class="container">
+    <div class="row">
+        {{#if this.error}}
+            <div class="col-12">
+                {{this.error}}
+            </div>    
+        {{else}}
+            <div class="col-8">
+                <h3>Документ в формате .html</h3>
+                <div id="doc-box">
+                    {{{this.doc_html}}}
+                </div>
+                <div class="dropdown-menu dropdown-menu-sm" id="context-menu">
+                    <a class="dropdown-item" href="#" data-type="management">Руководитель</a>
+                    <a class="dropdown-item" href="#" data-type="skill">Компетенция</a>
+                    <a class="dropdown-item" href="#" data-type="subject">Предметная область</a>
+                </div>
+            </div>
+            <div class="col-4">
+                <h3>Результат распознавания</h3>
+                <form>
+                    <table id="recog-result" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Позиция</th>
+                                <th scope="col">Значение</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Сотрудник</td>
+                                <td id="employees">
+                                    <a href="#" class="badge badge-primary">Ирина Петрова</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Предметная область</td>
+                                <td id="subjects">
+                                    <a href="#" class="badge badge-success">1</a>
+                                    <a href="#" class="badge badge-success">2</a>
+                                    <a href="#" class="badge badge-success">3</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Компетенции</td>
+                                <td id="skills">
+                                    <a href="#" class="badge badge-warning">1</a>
+                                    <a href="#" class="badge badge-warning">2</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        {{/if}}
+    </div>
+</div>
+<input id="input-words" value="{{words}}" type="hidden">
+

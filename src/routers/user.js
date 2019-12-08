@@ -31,7 +31,9 @@ router.post('/users/login', async (req, res) => {
         res.send({ user, token})
     }
     catch(e) {
-        res.status(400).send(e.message)
+        res.status(400).send({
+            errorMsg: 'Invalid password or email'
+        })
     }
 })
 
@@ -139,6 +141,10 @@ router.get('/users/me/avatar', auth, async (req, res) => {
     catch (e) {
         res.status(400).send()
     }
+})
+
+router.get('/users/list', async(req, res) => {
+    res.render('users')
 })
 
 module.exports = router
