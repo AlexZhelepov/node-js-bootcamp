@@ -13,7 +13,7 @@ $(document).ready(() => {
         let data = new FormData()
         data.append('file', file_input.files[0])
 
-        fetch('/doc/save', {
+        fetch('/doc/load', {
             method: 'POST',
             body: data,
         }).then((res) => {

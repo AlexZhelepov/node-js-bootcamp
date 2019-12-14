@@ -5,3 +5,37 @@ h1 {
 p {
     color: gray
 }
+
+.preloader {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    opacity: 80%;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+
+.preloader-center {
+    position: absolute;
+    top: 47%;
+    left: 47%;
+}
+
+.preloader-center div {
+    display: grid;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+.white {
+    color: white;
+}

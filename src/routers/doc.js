@@ -5,6 +5,9 @@ const fs = require('fs')
 const mammoth = require('mammoth')
 const child_process = require('child_process')
 const router = new express.Router()
+const Skill = require('../models/skill')
+const Subject = require('../models/subject')
+const UserInfo = require('../models/userInfo')
 require('../db/mongoose')
 
 const multer = require('multer')
@@ -22,6 +25,8 @@ router.get('/handle/:id', async (req, res) => {
     const _id = req.params.id
     try {
         const doc = await Doc.findById({_id})
+        const skills = await Skill.find({})
+        const subjects = await Subject.find({})
 
         // Подготовка html-формы.
         let html_view = undefined
@@ -62,14 +67,12 @@ router.get('/handle/:id', async (req, res) => {
 
                 // Выделение слов текста.
                 fs.readFile(process.env.MYSTEM_FOLDER + 'output.txt', 'utf-8', (err, data) => {
-                    data = data.toLowerCase()
-
                     const normal_words = [...data.matchAll(/(?<=\{)(.*?)(?=\})/g)]
                     let raw_words = [...data.match(/^.*?(?={)/)]
                     raw_words = raw_words.concat([...data.matchAll(/((?<=\})(.*?)(?=\{))/g)])
 
                     let words = []
-
+                    
                     // Слова берутся парами: как в тексте - нормализованное.
                     normal_words.forEach((v, i) => {
                         if (v[0].includes('|')) {
@@ -87,12 +90,29 @@ router.get('/handle/:id', async (req, res) => {
                         }
                     })
 
+                    // Удаление лишних символов из обнаруженных слов.
+                    words.forEach((v) => {
+                        if (v.raw.includes('?')) {
+                            v.raw = v.raw.replace('?', '')
+                        }
+
+                        if (v.norm.includes('?')) {
+                            v.norm = v.norm.replace('?', '')
+                        }
+                    })
+
+                    // Подготовка словаря со словами.
+                    dict = orderWords(words)
+
                     // Генерация редактора.
                     res.render('word_viewer', {
                         doc: doc,
                         doc_html: html_view,
                         doc_raw: raw_view,
-                        words: JSON.stringify(words)
+                        words: JSON.stringify(dict),
+                        skills: JSON.stringify(skills),
+                        subjects: JSON.stringify(subjects),
+                        orderedWords: JSON.stringify(words)
                     })    
                 })
             })
@@ -105,9 +125,119 @@ router.get('/handle/:id', async (req, res) => {
     }
 })
 
-// ACTION. Обработка документа с сохранением всех результатов.
-router.post('/handle/:id', async(req, res) => {
+// Создает словарь из слов.
+// Ключ: слово в нормальной форме, значения: все встречаюшиеся слова в тексте.
+const orderWords = (words) => {
+    let res = {}
+    
+    for (let i = 0; i < words.length; i++) {
+        const n = words[i].norm
+        const r = words[i].raw
 
+        if (n in res) {
+            res[n].push(r)
+        } else {
+            res[n] = [r]
+        }
+    }
+
+    return res
+}
+
+// ACTION. Обработка документа с сохранением всех результатов.
+router.post('/handle/:id', async (req, res) => {
+    try {
+        // Предоставление информации о том, что пользователь может быть задвоен.
+        if (req.body.firstPhase === true) {
+            const employees = req.body.data.employees
+            let doubledUsers = []
+            let newUsers = []
+
+            for (let i = 0; i < employees.length; i++) {
+                const userInfo = await UserInfo.findOne({name: employees[i]})
+                if (userInfo) {
+                    doubledUsers.push(employees[i])
+                } else {
+                    newUsers.push(employees[i])
+                }
+            }
+            res.send({ doubledUsers, newUsers })
+        } 
+        // Сохранение.
+        else if (req.body.secondPhase === true) {
+            const toAdd = req.body.toAdd
+            const toUpdate = req.body.toUpdate
+
+            // Сохраняем.
+            for (let i = 0; i < toAdd.length; i++) {
+                const userInfo = new UserInfo(toAdd[i])
+                await userInfo.save()
+            }
+
+            // Обновляем?.
+            for (let i = 0; i < toUpdate.length; i++) {
+                if (toUpdate[i].checked === true) {
+                    // Находим исполнителя.
+                    const userInfo = await UserInfo.findOne({ name: toUpdate[i].name })
+                    
+                    let skillsToAdd = []
+                    let subjectsToAdd = []
+
+                    // Обновляем его компетенции.
+                    // Текущие компетенции.
+                    for (let j = 0; j < toUpdate[i].skills.length; j++) {
+                        let hasSkill = false
+                        const skillToCheck = toUpdate[i].skills[j]
+
+                        for (let n = 0; n < userInfo.skills.length; n++) {
+                            if (skillToCheck.name === userInfo.skills[n].name) {
+                                hasSkill = true
+                                break                                
+                            }
+                        }
+
+                        if (hasSkill === false) {
+                            skillsToAdd.push(skillToCheck)
+                        }
+                    }
+
+                    // Обновляем его предметные области.
+                    // Текущие предметные области.
+                    for (let j = 0; j < toUpdate[i].subjects.length; j++) {
+                        let hasSubject = false
+                        const subjectToCheck = toUpdate[i].subjects[j]
+
+                        for (let n = 0; n < userInfo.subjects.length; n++) {
+                            if (subjectToCheck.name === userInfo.subjects[n].name) {
+                                hasSubject = true
+                                break                                
+                            }
+                        }
+
+                        if (hasSubject === false) {
+                            subjectsToAdd.push(subjectToCheck)
+                        }
+                    }
+
+                    // update skills.
+                    skillsToAdd.forEach((v) => {
+                        userInfo.skills.push(v)
+                    })
+
+                    // update subjects.
+                    subjectsToAdd.forEach((v) => {
+                        userInfo.subjects.push(v)
+                    })
+
+                    await userInfo.save()
+                    res.send()
+                }
+            }
+        }
+    }
+    catch (e) {
+        res.status(400).send(e)
+    }
 })
 
 // ACTION. Открыть страницу о документе.

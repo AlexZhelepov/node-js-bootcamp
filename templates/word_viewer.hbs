@@ -18,7 +18,7 @@
             </div>
             <div class="col-4">
                 <h3>Результат распознавания</h3>
-                <form>
+                <form action="/handle/{{doc._id}}" method="POST" id="form-user-info">
                     <table id="recog-result" class="table">
                         <thead>
                             <tr>
@@ -30,30 +30,95 @@
                             <tr>
                                 <td>Сотрудник</td>
                                 <td id="employees">
-                                    <a href="#" class="badge badge-primary">Ирина Петрова</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Предметная область</td>
                                 <td id="subjects">
-                                    <a href="#" class="badge badge-success">1</a>
-                                    <a href="#" class="badge badge-success">2</a>
-                                    <a href="#" class="badge badge-success">3</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Компетенции</td>
                                 <td id="skills">
-                                    <a href="#" class="badge badge-warning">1</a>
-                                    <a href="#" class="badge badge-warning">2</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <button class="btn btn-primary" type="submit" id="btn-save-user-info">
+                        Сохранить пользователя
+                    </button>
                 </form>
             </div>
         {{/if}}
     </div>
 </div>
 <input id="input-words" value="{{words}}" type="hidden">
+<input id="input-skills" value="{{skills}}" type="hidden">
+<input id="input-subjects" value="{{subjects}}" type="hidden">
+<input id="input-ordered-words" value="{{orderedWords}}" type="hidden">
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalSaveUserInfo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Режим сохранения</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="div-update-users" hidden>
+            <h4>Обновить</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Пользователь</th>
+                        <th scope="col">Компетенции</th>
+                        <th scope="col">Предметные области</th>
+                        <th scope="col">Добавить?</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-update-users">
+                    <tr>
+                        <td class="name"></td>
+                        <td class="skills"></td>
+                        <td class="subjects"></td>
+                        <td class="to-update"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="div-new-users" hidden>
+            <h4>
+                Создать
+            </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Пользователь</th>
+                        <th scope="col">Компетенции</th>
+                        <th scope="col">Предметные области</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-new-users">
+                    <tr>
+                        <td class="name"></td>
+                        <td class="skills"></td>
+                        <td class="subjects"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary" id="save-second-phase">Сохранить изменения</button>
+      </div>
+    </div>
+  </div>
+</div>
 
