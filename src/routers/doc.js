@@ -230,9 +230,9 @@ router.post('/handle/:id', async (req, res) => {
                     })
 
                     await userInfo.save()
-                    res.send()
                 }
             }
+            res.send()
         }
     }
     catch (e) {

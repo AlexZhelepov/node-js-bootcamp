@@ -1,0 +1,74 @@
+<h3>
+  База работников и их компетенций
+</h3>
+
+<div class="btn-group" role="group">
+  <button type="button" class="btn btn-primary" id="save-users-btn">Сохранить изменения</button>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ФИО</th>
+      <th scope="col">Должность</th>
+      <th scope="col">Предметные области</th>
+      <th scope="col">Компетенции</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#each userInfos}}
+        <tr class="row-user" data-id="{{this.id}}">
+            <td>{{@index}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.rank}}</td>
+            <td>
+                <table class="table" id="tb-subjects-{{this.id}}">
+                  <tr>
+                    <th scope="col">Предметная область</th>
+                    <th scope="col">Значение в [0..1]</th>
+                    <th scope="col"></th>
+                  </tr>
+                  {{#each this.subjects}}
+                    <tr>
+                      <td>
+                        <input type="text" class="form-control" value="{{this.name}}">
+                      </td>
+                      <td>
+                        <input type="range" class="custom-range" min="0" max="100" value="{{this.value}}" data-slider-step="0.01">
+                      </td>
+                      <td>
+                        <button class="btn btn-primary rm-btn" type="button">Удалить</button>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </table>
+            </td>
+            <td>
+               <table class="table" id="tb-skills-{{this.id}}">
+                  <tr>
+                    <th scope="col">Компетенции</th>
+                    <th scope="col">Значение в [0..1]</th>
+                  </tr>
+                  {{#each this.skills}}
+                    <tr>
+                      <td>
+                        <input type="text" class="form-control" value="{{this.name}}">
+                      </td>
+                      <td>
+                        <input type="range" class="custom-range" min="0" max="100" value="{{this.value}}">
+                      </td>
+                      <td>
+                        <button class="btn btn-primary rm-btn" type="button">Удалить</button>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </table>
+            </td>
+        </tr>
+      {{/each}}
+  </tbody>
+</table>
+
+
+<script src="/js/userInfo_list.js" type="text/javascript"></script>

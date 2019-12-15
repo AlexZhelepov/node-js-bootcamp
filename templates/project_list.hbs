@@ -1,0 +1,115 @@
+<h3>
+    База проектов для исполнения
+</h3>
+
+{{#each projects}}
+    <div class="container project-group">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="margin">Общие данные</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="margin">
+                    <input class="form-control" id="prj-name-{{this.id}}" type="text" placeholder="Название проекта" value="{{this.name}}"/>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p class="margin">
+                    <textarea class="form-control" id="prj-desc-{{this.id}}" placeholder="Описание проекта">{{this.description}}</textarea>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="margin">Вакансии</h5>
+            </div>
+        </div>
+        <div class="row" id="vacancies-group-{{this.id}}">
+            {{#each this.vacancies}}
+            <div class="col-md-4">
+                <p class="margin">
+                    <input class="form-control vac-name" type="text" placeholder="Наименование вакансии" value="{{this.name}}"/>
+                </p>
+                <p class="margin">
+                    <label>Уровень навыка</label>
+                    <input class="custom-range vac-value" type="range" value="{{this.value}}"/>
+                </p>
+                <p class="margin">
+                    <button type="button" class="btn btn-light btn-vac-delete">Удалить</button>
+                </p>
+            </div>
+            {{/each}}
+            <div class="col-md-4">
+                <div class="margin">
+                    <button type="button" class="fill btn btn-light btn-add-vac">Добавить вакансию</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button data-id="{{this.id}}" type="button" class="fill btn btn-primary btn-save-project margin">Сохранить проект</button>
+            </div>
+        </div>
+    </div>
+{{/each}}
+
+<hr/>
+
+<h5 class="margin">Создать новый проект</h5>
+
+<div class="container project-group">
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="margin">Общие данные</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="margin">
+                <input class="form-control" id="prj-name" type="text" placeholder="Название проекта"/>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p class="margin">
+                <textarea class="form-control" id="prj-desc" placeholder="Описание проекта"></textarea>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="margin">Вакансии</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4" id="vac-template">
+            <p class="margin">
+                <input class="form-control vac-name" type="text" placeholder="Наименование вакансии"/>
+            </p>
+            <p class="margin">
+                <label>Уровень навыка</label>
+                <input class="custom-range vac-value" type="range" value="0"/>
+            </p>
+            <p class="margin">
+                <button type="button" class="btn btn-light btn-vac-delete">Удалить</button>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <div class="margin">
+                <button type="button" class="fill btn btn-light btn-add-vac margin">Добавить вакансию</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button id="btn-add-new-project" type="button" class="fill btn btn-primary">Добавить проект</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/project_list.js" type="text/javascript"></script>

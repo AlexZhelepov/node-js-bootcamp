@@ -492,6 +492,7 @@ const saveSecondPhase = () => {
         }).catch((err) => {
             console.log(err)
         }).finally(() => {
+            console.log('!!!')
             $('#modalSaveUserInfo').modal('hide')
             $('.preloader').hide()
         })

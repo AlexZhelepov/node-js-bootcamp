@@ -12,14 +12,14 @@ require('./db/mongoose') // connects to DB.
 const userRouter = require('./routers/user')
 const taskRouter = require('./routers/task')
 const docRouter = require('./routers/doc')
+const userInfoRouter = require('./routers/userInfo')
+const projectRouter = require('./routers/project')
 const auth = require('./middleware/auth')
 const Subject = require('./models/subject')
 const Skill = require('./models/skill')
 
 const app = express()
 const port = process.env.PORT
-
-console.log(path.join(__dirname, '../public'))
 
 // Paths for express config.
 const publicDirectoryPath = path.join(__dirname, '../public')
@@ -46,6 +46,8 @@ app.use(express.json())
 app.use(docRouter)
 app.use(userRouter)
 app.use(taskRouter)
+app.use(projectRouter)
+app.use(userInfoRouter)
 
 app.get('/', async (req, res) => {
     res.render('index')
