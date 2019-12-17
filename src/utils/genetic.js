@@ -47,5 +47,4 @@ const makeNextGeneration = () => {
 }
 
 
-
 module.exports = genetic
