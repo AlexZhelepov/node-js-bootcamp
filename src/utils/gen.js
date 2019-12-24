@@ -23,7 +23,7 @@ const employees = [
             },
             {
                 name: 'Навык 3',
-                value: 0.91
+                value: 0.23
             }
         ]
     },
@@ -155,7 +155,7 @@ const project = {
 }
 
 // Формирование команд первого поколения.
-const createTeams = (employees, number, project) => {
+const initializeTeams = (employees, number, project) => {
     let teams = []
     
     if (project.vacancies.length > employees.length) {
@@ -193,14 +193,10 @@ const createTeams = (employees, number, project) => {
                 usedMembers.push(r)
             }
         }
-
         teams.push(team)
     }
 
-    return {
-        code: 0,
-        res: teams
-    }
+    return teams
 }
 
 // Функция подсчета значения функции для каждой из команд. 
@@ -225,7 +221,6 @@ const calcFunc = (project, teams) => {
                 sumSkills += skills[n].value
             }
 
-
             const Cp = weightExp * (userExp - reqExp) / reqExp + weightSkills * sumSkills + vacation
             teamValue += (1 - Cp) // согласно формуле.
         }
@@ -248,7 +243,7 @@ const compare = (a, b) => {
     return 0
 }
 
-// Получаем элитные хромосомы.
+// Получаем элитные хромосомы и те, которые не очень.
 const getRating = (rating, teams, eliteCount) => {
     let eliteTeams = []
     let restTeams = []
@@ -274,7 +269,9 @@ const createNextGenerationTeams = (rating, employees, changeCount) => {
     let teams = []
 
     // Сохранение элитных команд.
-    teams.push(rating.eliteTeams)
+    rating.eliteTeams.forEach((v, i) => {
+        teams.push(v)
+    })
 
     // Обновление остальных и создание команд.
     for (let i = 0; i < rating.restTeams.length; i++) {
@@ -304,7 +301,7 @@ const randChange = (team, employees, changeCount) => {
 
     // Кого меняем в команде.
     const mustBeChangedIndices = defineWhoMustBeChanged(team, changeCount)
-    
+
     // Производим замену(ы).
     const newTeam = makeChange(team, mustBeChangedIndices, availableEmployees)
    
@@ -339,8 +336,8 @@ const getAvailableEmployees = (employees, team) => {
 const defineWhoMustBeChanged = (team, changeCount) => {
     let vacNums = []
 
-    while (vacNums.length != changeCount) {
-        const r = Math.floor(Math.random(team.length))
+    while (vacNums.length < changeCount) {
+        const r = Math.floor(Math.random() * team.length)
         if (vacNums.includes(r)) {
             continue
         } else {
@@ -357,17 +354,17 @@ const makeChange = (team, changedIndices, availableEmployees) => {
     let substitutes = []
 
     // Ищем кем подменить.
-    while (substitutes.length < changedIndices) {
-        const r = Math.floor(Math.random(availableEmployees.length))
+    while (substitutes.length < changedIndices.length) {
+        const r = Math.floor(Math.random() * availableEmployees.length)
         if (substitutes.includes(r)) {
             continue
         } else {
             substitutes.push(r)
         }
-    }
+    }  
 
     // Формируем новую команду, заменяя указанных членов определенными.
-    for (let i = 0, n = 0; i < substitutes.length; i++) {
+    for (let i = 0, n = 0; i < team.length; i++) {
         if (changedIndices.includes(i)) {
             newTeam.push(availableEmployees[substitutes[n]])
             n++
@@ -380,19 +377,54 @@ const makeChange = (team, changedIndices, availableEmployees) => {
 }
 
 // Генетический алгоритм.
-const geneticAlgorithm = (project, employees, iterations = 10) => {
+const geneticAlgorithm = (project, employees, teamNumber = 30, changeCount = 2, eliteCount = 1, iterations = 30) => {
     // Создание команд.
-    let res = createTeams(employees, 10, project)
+    let teams = []
+    let epoch = 0
 
+    while (epoch < iterations) {
+        if (epoch === 0) {
+            teams = initializeTeams(employees, teamNumber, project)
+        }
+
+        // Расчет функции.
+        let result = calcFunc(project, teams)
+
+        // Формирование рейтинга.
+        let rating = getRating(result, teams, eliteCount)
+
+        printRating(result, eliteCount, epoch.toString())
+        printTeam(rating.eliteTeams[0])
+
+        // Формирование группы команд.
+        teams = createNextGenerationTeams(rating, employees, changeCount)
+
+        epoch++
+    }
+
+    let finalRes = calcFunc(project, teams)
+    let finalRating = getRating(finalRes, teams, eliteCount)
+
+    printRating(finalRes, eliteCount, 'Final')
+    printTeam(finalRating.eliteTeams[0])
 }
 
+const printRating = (rating, eliteCount, epoch) => {
+    console.log('=== ' + epoch + ' ===')
 
-// Расчет команд.
-let rating = calcFunc(project, res.res)
+    rating = rating.sort(compare)
 
-// Получить рейтинг команд (элитные и не очень).
-let teamRes = getRating(rating, res.res, 3)
+    for (let i = 0; i < eliteCount; i++) {
+        console.log(rating[i].value)
+    }
 
-// 
+    console.log('==========')
+}
 
-console.log(teamRes.restTeams)
+const printTeam = (team) => {
+    for (let i = 0; i < team.length; i++) {
+        console.log(team[i].name)
+    }
+}
+
+geneticAlgorithm(project, employees, teamNumber=4, changeCount=1, eliteCount=1, iterations=30)
