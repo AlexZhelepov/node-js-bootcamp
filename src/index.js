@@ -14,6 +14,7 @@ const taskRouter = require('./routers/task')
 const docRouter = require('./routers/doc')
 const userInfoRouter = require('./routers/userInfo')
 const projectRouter = require('./routers/project')
+const ontologyRouter = require('./routers/ontology')
 const auth = require('./middleware/auth')
 const Subject = require('./models/subject')
 const Skill = require('./models/skill')
@@ -48,6 +49,7 @@ app.use(userRouter)
 app.use(taskRouter)
 app.use(projectRouter)
 app.use(userInfoRouter)
+app.use(ontologyRouter)
 
 app.get('/', async (req, res) => {
     res.render('index')
@@ -75,21 +77,21 @@ const initSkillsAndSubjects = async () => {
     ]
 
     const initSubjects = [
-        new Subject ({ name: 'здравоохранение' }),
-        new Subject ({ name: 'демография' }), 
-        new Subject ({ name: 'инновации' }), 
-        new Subject ({ name: 'среда' }),
-        new Subject ({ name: 'ит' }), 
-        new Subject ({ name: 'it' }),
-        new Subject ({ name: 'агропромышленность'}),
-        new Subject ({ name: 'экспорт' }),
-        new Subject ({ name: 'семья' }),
-        new Subject ({ name: 'образование' }),
-        new Subject ({ name: 'кадры' }),
-        new Subject ({ name: 'бюджетирование' }),
-        new Subject ({ name: 'экология' }),
-        new Subject ({ name: 'строительство' }),
-        new Subject ({ name: 'культура' })
+        new Subject ({ class: 'здравоохранение', name: 'здравоохранение' }),
+        new Subject ({ class: 'демография', name: 'демография' }), 
+        new Subject ({ class: 'инновации', name: 'инновации' }), 
+        new Subject ({ class: 'среда', name: 'среда' }),
+        new Subject ({ class: 'IT', name: 'ит' }), 
+        new Subject ({ class: 'IT', name: 'it' }),
+        new Subject ({ class: 'агропромышленность', name: 'агропромышленность'}),
+        new Subject ({ class: 'экспорт', name: 'экспорт' }),
+        new Subject ({ class: 'семья', name: 'семья' }),
+        new Subject ({ class: 'образование', name: 'образование' }),
+        new Subject ({ class: 'кадры', name: 'кадры' }),
+        new Subject ({ class: 'бюджетирование', name: 'бюджетирование' }),
+        new Subject ({ class: 'экология', name: 'экология' }),
+        new Subject ({ class: 'строительство', name: 'строительство' }),
+        new Subject ({ class: 'культура', name: 'культура' })
     ]
 
     if (subjects.length === 0) {

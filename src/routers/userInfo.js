@@ -20,6 +20,8 @@ router.post('/userInfo/list', async (req, res) => {
             let userInfo = await UserInfo.findById(req.body[i].id)
             userInfo.skills = req.body[i].skills
             userInfo.subjects = req.body[i].subjects
+            userInfo.experienceYears = req.body[i].experienceYears
+            userInfo.vacation = req.body[i].vacation
             await userInfo.save()
         }
         res.send()

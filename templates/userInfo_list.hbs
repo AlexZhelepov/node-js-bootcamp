@@ -2,18 +2,14 @@
   База работников и их компетенций
 </h3>
 
-<div class="btn-group" role="group">
-  <button type="button" class="btn btn-primary" id="save-users-btn">Сохранить изменения</button>
-</div>
-
 <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">ФИО</th>
       <th scope="col">Должность</th>
-      <th scope="col">Предметные области</th>
-      <th scope="col">Компетенции</th>
+      <th scope="col">Опыт и отпуск</th>
+      <th scope="col">ПО и Компетенции</th>
     </tr>
   </thead>
   <tbody>
@@ -23,12 +19,29 @@
             <td>{{this.name}}</td>
             <td>{{this.rank}}</td>
             <td>
-                <table class="table" id="tb-subjects-{{this.id}}">
-                  <tr>
-                    <th scope="col">Предметная область</th>
-                    <th scope="col">Значение в [0..1]</th>
-                    <th scope="col"></th>
-                  </tr>
+              <table class="table" id="tb-experience-{{this.id}}">
+                <tr>
+                  <th scope="col">Опыт работы</th>
+                  <th scope="col">Вероятность ухода в отпуск, [0..1]</th>
+                </tr>
+                <tr>
+                  <td>
+                    <input id="experienceYears-{{this.id}}" type="text" class="form-control" value="{{this.experienceYears}}">
+                  </td>
+                  <td>
+                    <input id="vacation-{{this.id}}" type="range" min="0" max="100" data-slider-step="0.01" class="custom-range" value="{{this.vacation}}">
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <table class="table" id="tb-subjects-{{this.id}}">
+                <tr>
+                  <th scope="col">Предметная область</th>
+                  <th scope="col">Значение, [0..1]</th>
+                  <th scope="col"></th>
+                </tr>
+                {{#if this.subjects}}
                   {{#each this.subjects}}
                     <tr>
                       <td>
@@ -42,14 +55,21 @@
                       </td>
                     </tr>
                   {{/each}}
-                </table>
-            </td>
-            <td>
-               <table class="table" id="tb-skills-{{this.id}}">
-                  <tr>
-                    <th scope="col">Компетенции</th>
-                    <th scope="col">Значение в [0..1]</th>
-                  </tr>
+                {{else}}
+                    <tr>
+                      <td>
+                        Предметные области не найдены
+                      </td>
+                    </tr>
+                {{/if}}
+              </table>
+              <table class="table" id="tb-skills-{{this.id}}">
+                <tr>
+                  <th scope="col">Компетенция</th>
+                  <th scope="col">Значение, [0..1]</th>
+                  <th scope="col"></th>
+                </tr>
+                {{#if this.skills}}
                   {{#each this.skills}}
                     <tr>
                       <td>
@@ -63,12 +83,20 @@
                       </td>
                     </tr>
                   {{/each}}
-                </table>
+                {{else}}
+                  <tr>
+                    <td colspan="3">Компетенции не найдены</td>
+                  </tr>
+                {{/if}}
+              </table>
             </td>
         </tr>
       {{/each}}
   </tbody>
 </table>
 
+<div class="btn-group" role="group">
+  <button type="button" class="btn btn-primary" id="save-users-btn">Сохранить изменения</button>
+</div>
 
 <script src="/js/userInfo_list.js" type="text/javascript"></script>

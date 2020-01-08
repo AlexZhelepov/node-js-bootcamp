@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h3>
+                Подробности проекта {{this.project.name}}
+            </h3>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                    <th scope="col">Описание проекта</th>
+                    <td>{{this.project.description}}</td>
+                    </tr>
+                    <tr>
+                    <th scope="col">Дата создания</th>
+                    <td>{{this.project.createdAt}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>
+                Участники проекта
+            </h4>
+
+            {{#if this.users}}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Участник проекта</th>
+                    </tr>    
+                </thead>
+                <tbody>
+                    {{#each this.users}}
+                        <tr>
+                            <td>{{this.name}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            {{else}}
+                <p>
+                    Требуется сформировать команду
+                </p>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h4>Настройки алгоритма</h4>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Количество команд</th>
+                        <td>
+                            <input id="team-count" class="form-control" type="text" placeholder="Количество команд" value="20">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Количество мутаций</th>
+                        <td>
+                            <input id="mut-count" class="form-control" type="text" placeholder="Количество мутаций" value="2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Количество элитных хромосом</th>
+                        <td>
+                            <input id="elite-count" class="form-control" type="text" placeholder="Количество элитных хромосом" value="2">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Количество итераций</th>
+                        <td>
+                            <input id="epoch-count" class="form-control" type="text" placeholder="Количество итераций" value="200">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <a id="btn-form-team" href="/projects/form/{{this.project.id}}" type="button" class="fill btn btn-primary btn-save-project margin">Сформировать команду</a>
+        </div>
+    </div>
+</div>
+
+<input id="project-id" type="hidden" value="{{this.project._id}}">
+
+<script src="/js/project_details.js" type="text/javascript"></script>

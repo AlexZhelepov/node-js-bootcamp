@@ -1,3 +1,5 @@
+// import { stat } from "fs"
+
 const cls = { 'management': 'badge-primary', 'skills': 'badge-warning', 'subject': 'badge-success' }
 
 $(document).ready(() => {
@@ -9,7 +11,25 @@ $(document).ready(() => {
     const skills = JSON.parse($('#input-skills').val())
     const orderedWords = JSON.parse($('#input-ordered-words').val())
 
-    selectSubjects($('#doc-box'), subjects, words, cls['subject'])
+    const stats = selectSubjects($('#doc-box'), subjects, words, cls['subject'])
+    // Отображаем статистику.
+    let statsHtml = ''
+    let total = 0
+    for (let i = 0; i < stats.length; i++) {
+        statsHtml += ('<p>Термин: ' + stats[i].word + '</p>')
+        statsHtml += ('<p>Класс(ы): ' + stats[i].class.join(', ') + '</p>')
+        statsHtml += ('<p>Количество: ' + stats[i].count + '</p>')
+        statsHtml += ('<hr/>')
+        total += stats[i].count
+    }
+
+    statsHtml += ('<p><strong>Всего терминов: ' + total +  '</strong></p>')
+    for (let i = 0; i < stats.length; i++) { 
+        statsHtml += ('<p><strong>' + stats[i].class.join(', ') + ': ' + (stats[i].count / total * 100).toString() + '%' + '</strong></p>')
+    }
+
+    $('#doc-stats').html(statsHtml)
+
     findSkills($('#doc-box'), skills, words, cls['skills'], orderedWords)
     findExecutive($('#doc-box'), cls['management'])
 
@@ -173,7 +193,8 @@ const selectSubjects = (where, subjects, words, cls) => {
         }
     }
 
-    // 2. Выделение и заполнение предметных областей.
+    // 2. Выделение и заполнение предметных областей + сбор статистики.
+    let stats = []
     for (word in words) {
         if (foundSubjects.includes(word)) {
             underscoreWords($(where), cls, {
@@ -184,8 +205,28 @@ const selectSubjects = (where, subjects, words, cls) => {
                 norm: word,
                 variants: words[word]
             })
+
+            stats.push({
+                word: word,
+                class: defineClass(subjects, word),
+                count: words[word].length
+            })
         }
     }
+
+    return stats
+}
+
+const defineClass = (subjects, sbj) => {
+    let classes = []
+    
+    for (let i = 0; i < subjects.length; i++) {
+        if (subjects[i].name === sbj) {
+            classes.push(subjects[i].class)
+        }
+    }
+
+    return classes
 }
 
 const findSkills = (where, skills, words, cls, orderedWords) => {
@@ -294,14 +335,16 @@ const findExecutive = (where, cls) => {
         const text = $rows.eq(5).text()
         const employees = text.match(/[А-я]*\s[А-я]\.[А-я]\./) // так делать плохо!
 
-        for (let i = 0; i < employees.length; i++) {
-            const str = employees[i]
+        if (employees) {
+            for (let i = 0; i < employees.length; i++) {
+                const str = employees[i]
 
-            underscoreWords($(where), cls, str)
-            addNewBadge($('#employees'), cls, {
-                norm: str,
-                variants: [str]
-            })
+                underscoreWords($(where), cls, str)
+                addNewBadge($('#employees'), cls, {
+                    norm: str,
+                    variants: [str]
+                })
+            }
         }
     }
 }

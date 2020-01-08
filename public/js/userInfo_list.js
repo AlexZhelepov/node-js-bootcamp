@@ -17,7 +17,15 @@ $(document).ready(() => {
         for (let i = 0; i < $rows.length; i++) {
             const id = $rows.eq(i).data('id')
             
-            // retrieve subjects.
+            // Получение вероятности отпуска.
+            $vacation = $('#vacation-' + id)
+            vacation = $vacation.eq(0).val()
+
+            // Получение опыта работы.
+            $experienceYears = $('#experienceYears-' + id)
+            experienceYears = $experienceYears.eq(0).val()
+
+            // Получение subjects.
             $keysSubjects = $('#tb-subjects-' + id + ' input[type="text"]')
             $valuesSubjects = $('#tb-subjects-' + id + ' input[type="range"]')
             
@@ -30,7 +38,7 @@ $(document).ready(() => {
                 })
             })
 
-            // retrieve skills.
+            // Получение skills.
             $keysSkills = $('#tb-skills-' + id + ' input[type="text"]')
             $valuesSkills = $('#tb-skills-' + id + ' input[type="range"]')
 
@@ -44,7 +52,7 @@ $(document).ready(() => {
             })
 
             data.push({
-                id, skills, subjects
+                id, skills, subjects, vacation, experienceYears
             })
         }
 

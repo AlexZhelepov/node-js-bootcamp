@@ -30,18 +30,26 @@
         </div>
         <div class="row" id="vacancies-group-{{this.id}}">
             {{#each this.vacancies}}
-            <div class="col-md-4">
-                <p class="margin">
-                    <input class="form-control vac-name" type="text" placeholder="Наименование вакансии" value="{{this.name}}"/>
-                </p>
-                <p class="margin">
-                    <label>Уровень навыка</label>
-                    <input class="custom-range vac-value" type="range" value="{{this.value}}"/>
-                </p>
-                <p class="margin">
-                    <button type="button" class="btn btn-light btn-vac-delete">Удалить</button>
-                </p>
-            </div>
+                <div class="col-md-4">
+                    <p class="margin">
+                        <input class="form-control vac-name" type="text" placeholder="Наименование вакансии" value="{{this.name}}" />
+                    </p>
+                    <p class="margin">
+                        <label>Требуемый опыт (лет)</label>
+                        <input class="form-control vac-exp" type="text" value="{{this.requiredExperienceYears}}"/>
+                    </p>
+                    <p class="margin">
+                        <label>Вес опыта, [0..1]</label>
+                        <input class="custom-range vac-weight-exp" type="range" value="{{this.weightExperience}}"/>
+                    </p>
+                    <p class="margin">
+                        <label>Вес навыков, [0..1]</label>
+                        <input class="custom-range vac-weight-skills" type="range" value="{{this.weightSkill}}"/>
+                    </p>
+                    <p class="margin">
+                        <button type="button" class="btn btn-light btn-vac-delete">Удалить</button>
+                    </p>
+                </div>
             {{/each}}
             <div class="col-md-4">
                 <div class="margin">
@@ -50,7 +58,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
+                <a href="/projects/details/{{this.id}}" type="button" class="fill btn btn-primary btn-save-project margin">Подробности проекта</a>
+            </div>
+            <div class="col-md-6">
                 <button data-id="{{this.id}}" type="button" class="fill btn btn-primary btn-save-project margin">Сохранить проект</button>
             </div>
         </div>
@@ -89,11 +100,19 @@
     <div class="row">
         <div class="col-md-4" id="vac-template">
             <p class="margin">
-                <input class="form-control vac-name" type="text" placeholder="Наименование вакансии"/>
+                <input class="form-control vac-name" type="text" placeholder="Наименование вакансии" />
             </p>
             <p class="margin">
-                <label>Уровень навыка</label>
-                <input class="custom-range vac-value" type="range" value="0"/>
+                <label>Требуемый опыт (лет)</label>
+                <input class="form-control vac-exp" type="text" value="0"/>
+            </p>
+            <p class="margin">
+                <label>Вес опыта, [0..1]</label>
+                <input class="custom-range vac-weight-exp" type="range" value="0"/>
+            </p>
+            <p class="margin">
+                <label>Вес навыков, [0..1]</label>
+                <input class="custom-range vac-weight-skills" type="range" value="0"/>
             </p>
             <p class="margin">
                 <button type="button" class="btn btn-light btn-vac-delete">Удалить</button>

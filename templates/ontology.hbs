@@ -1,0 +1,47 @@
+<h2>Онтология</h2>
+
+<h3>Предметные области</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            {{#if this.displayData}}
+                <p>
+                    Примечание: необходимо вводить термины через ,
+                </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Класс</th>
+                            <th>Термины</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subject-body">
+                        {{#each this.displayData}}
+                            <tr>
+                                <td>
+                                    <input class="form-control class" type="text" value={{this.class}}>
+                                </td>
+                                <td>
+                                    <textarea class="form-control terms" placeholder="Ввод терминов осуществлять через ,">{{this.row}}</textarea>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+                <p>Нет данных</p>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <a id="btn-add-class" href="" class="fill btn btn-primary">Добавить класс</a>
+        </div>
+        <div class="col-6">
+            <a id="btn-save-all" href="" class="fill btn btn-primary">Сохранить</a>
+        </div>
+    </div>
+</div>
+
+<script src="/js/ontology.js" type="text/javascript"></script>

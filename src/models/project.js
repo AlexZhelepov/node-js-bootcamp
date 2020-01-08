@@ -16,9 +16,17 @@ const projectSchema = new mongoose.Schema({
             type: String,
             required: true
         },
-        qualification: {
+        requiredExperienceYears: {
             type: Number,
-            default: 25,
+            default: 0,
+            required: true
+        },
+        weightExperience: {
+            type: Number,
+            required: true
+        },
+        weightSkill: {
+            type: Number,
             required: true
         },
         user: {

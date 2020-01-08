@@ -10,6 +10,14 @@ const userInfoSchema = new mongoose.Schema({
         type: String,
         default: 'работник' // потом поменять!
     },
+    vacation: {
+        type: Number,
+        default: 0.0
+    },
+    experienceYears: {
+        type: Number,
+        default: 0
+    },
     skills: [{
         name: { 
             type: String,
