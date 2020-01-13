@@ -4,6 +4,7 @@ const formidable = require('formidable')
 const fs = require('fs')
 const mammoth = require('mammoth')
 const child_process = require('child_process')
+const line_reader = require('line-reader')
 const router = new express.Router()
 const Skill = require('../models/skill')
 const Subject = require('../models/subject')
@@ -144,6 +145,112 @@ const orderWords = (words) => {
     return res
 }
 
+// ACTION. Обучение с помощью документа.
+// Читаем файл и готовим весь необходимый контент через mystem.
+router.get('/learn/:id', async (req, res) => {
+    try {
+        const _id = req.params.id
+        let raw_view = undefined
+        const doc = await Doc.findById({_id})
+
+        // Извлечение просто текста.
+        await mammoth.extractRawText({path: doc.path})
+            .then((r) => {
+                raw_view = r.value
+            })
+            .catch((err) => {
+                throw new Error('Не удалось найти файл!')
+            })
+
+        fs.writeFile(process.env.MYSTEM_FOLDER + 'input.txt', raw_view, async () => { 
+            const cmd = 'cd '+ process.env.MYSTEM_FOLDER + ' &&  mystem.exe -cgin --format json input.txt output.txt'
+            
+            child_process.exec(cmd, async (error, stdout, stderr) => {
+                if (error) {
+                    throw new Error('Произошла ошибка при обработке файла!')
+                }
+
+                let terms = []
+                const classes = ['']
+                const subjects = await Subject.find({})
+
+                for (let i = 0; i < subjects.length; i++) {
+                    const cls = subjects[i].class
+                    if (!classes.includes(cls)) {
+                        classes.push(cls)
+                    }
+                }
+
+                line_reader.eachLine(process.env.MYSTEM_FOLDER + 'output.txt', async (line, last) => {
+                    const json = JSON.parse(line)
+                    
+                    if (json.analysis) {
+                        for (let i = 0; i < json.analysis.length; i++) {
+                            if (json.analysis[i].gr[0] === 'S') {
+                                terms.push({term: json.analysis[i].lex, classes})
+                            }    
+                        }
+                    }
+
+                    if(last){
+                        // Все прошло успешно!
+                        res.render('learn', {
+                            terms
+                        })
+                    }
+                });
+            })
+        })
+    }
+    catch (e) {
+        console.log('Error')
+        res.status(400).send()
+    }
+})
+
+// Сохранение данных о терминах новых.
+router.post('/learn', async (req, res) => {
+    try {
+        let data = req.body.filter((v, i, arr) => {
+            if (v.className !== '') {
+                return v
+            }
+        })
+
+        const subjects = await Subject.find({})
+        let items = []
+
+        for (let j = 0; j < data.length; j++) {
+            if (!checkIfExists(data[j], subjects)) {
+                items.push(data[j])
+            }
+        }
+
+        // Сохранение новых терминов.
+        for (let i = 0; i < items.length; i++) {
+            let obj = {}
+            obj.class = items[i].className
+            obj.name = items[i].term
+
+            let sbj = new Subject(obj)
+            await sbj.save()
+        }
+        res.send()
+    }
+    catch (e) {
+        res.status(400).send()
+    }
+})
+
+const checkIfExists = (val, subjects) => {
+    for (let i = 0; i < subjects.length; i++) {
+        if (subjects[i].class === val.className && subjects[i].name === val.term) {
+            return true
+        }
+    }
+    return false
+}
+
 // ACTION. Обработка документа с сохранением всех результатов.
 router.post('/handle/:id', async (req, res) => {
     try {
@@ -262,7 +369,7 @@ router.post('/doc/load', (req, res) => {
             res.status(400).send()
         }
     })
-    
+
     // Создание записи о файле в БД.
     form.on('file', (name, file) => {
         try {
@@ -279,7 +386,7 @@ router.post('/doc/load', (req, res) => {
             fs.unlinkSync(file.path)
             res.status(400).send()
         }
-    })
+    })    
 
     form.on('error', (err) => {
         res.status(400).send({error: err.message})

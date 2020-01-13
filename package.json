@@ -10,6 +10,7 @@
     "formidable": "^1.2.1",
     "hbs": "^4.0.6",
     "jsonwebtoken": "^8.5.1",
+    "line-reader": "^0.4.0",
     "mammoth": "^1.4.9",
     "mongodb": "^3.3.5",
     "mongoose": "^5.7.12",

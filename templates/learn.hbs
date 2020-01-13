@@ -1,0 +1,43 @@
+<h2>Термины</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            {{#if this.terms}}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Потенциальный термин</th>
+                            <th>Принадлежность</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subject-body">
+                        {{#each this.terms}}
+                            <tr>
+                                <td class="term">
+                                    {{this.term}}
+                                </td>
+                                <td>
+                                    <select class="form-control class-name" id="exampleFormControlSelect1">
+                                        {{#each this.classes}}
+                                            <option>{{this}}</option>
+                                        {{/each}}
+                                    </select>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+                <p>Термины не найдены</p>
+            {{/if}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a id="btn-save-all" href="" class="fill btn btn-primary">Сохранить</a>
+        </div>
+    </div>
+</div>
+
+<script src="/js/learn.js" type="text/javascript"></script>
