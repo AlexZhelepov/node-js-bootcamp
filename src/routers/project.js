@@ -33,6 +33,8 @@ router.post('/projects/update', async (req, res) => {
     try {
         const project = await Project.findById(req.body.id)
 
+        console.log(req.body)
+
         project.name = req.body.name
         project.description = req.body.description
         project.vacancies = req.body.vacancies

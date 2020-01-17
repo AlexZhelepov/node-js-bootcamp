@@ -253,6 +253,8 @@ const checkIfExists = (val, subjects) => {
 
 // ACTION. Обработка документа с сохранением всех результатов.
 router.post('/handle/:id', async (req, res) => {
+    const _id = req.params.id
+    
     try {
         // Предоставление информации о том, что пользователь может быть задвоен.
         if (req.body.firstPhase === true) {
@@ -289,7 +291,7 @@ router.post('/handle/:id', async (req, res) => {
                     
                     let skillsToAdd = []
                     let subjectsToAdd = []
-
+                    
                     // Обновляем его компетенции.
                     // Текущие компетенции.
                     for (let j = 0; j < toUpdate[i].skills.length; j++) {
@@ -326,6 +328,18 @@ router.post('/handle/:id', async (req, res) => {
                         }
                     }
 
+                    // Обновляем его статистику.
+                    for (let n = 0; n < toUpdate[i].stats.length; n++) {
+                        const docId = toUpdate[i].stats[n].docId
+
+                        // Удаляем статистику по документу, чтобы потом просто обновить ее.
+                        userInfo.stats = userInfo.stats.filter((v => {
+                            return v.docId != docId
+                        }))
+
+                        await userInfo.save()
+                    }                 
+
                     // update skills.
                     skillsToAdd.forEach((v) => {
                         userInfo.skills.push(v)
@@ -335,6 +349,11 @@ router.post('/handle/:id', async (req, res) => {
                     subjectsToAdd.forEach((v) => {
                         userInfo.subjects.push(v)
                     })
+
+                    // update stats.
+                    toUpdate[i].stats.forEach((v) => {
+                        userInfo.stats.push(v)
+                    })                    
 
                     await userInfo.save()
                 }

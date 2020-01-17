@@ -37,7 +37,31 @@ const userInfoSchema = new mongoose.Schema({
             type: Number,
             default: 0
         }
-    }]
+    }],
+    stats: [{
+        docId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Doc'
+        },
+        class: [{
+            name: {
+                type: String,
+                required: true
+            }
+        }],
+        word: {
+            type: String,
+            required: true
+        },
+        count: {
+            type: Number,
+            default: 0
+        }
+    }],
+    statsStr: {
+        type: String
+    }
 }, {
     timestamps: true
 })

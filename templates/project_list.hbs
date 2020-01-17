@@ -39,6 +39,10 @@
                         <input class="form-control vac-exp" type="text" value="{{this.requiredExperienceYears}}"/>
                     </p>
                     <p class="margin">
+                        <label>Ключевые навыки</label>
+                        <input class="form-control vac-subjects" type="text" placeholder="Ключевые навыки через ," value="{{this.subjects}}"/>
+                    </p>
+                    <p class="margin">
                         <label>Вес опыта, [0..1]</label>
                         <input class="custom-range vac-weight-exp" type="range" value="{{this.weightExperience}}"/>
                     </p>
@@ -105,6 +109,10 @@
             <p class="margin">
                 <label>Требуемый опыт (лет)</label>
                 <input class="form-control vac-exp" type="text" value="0"/>
+            </p>
+            <p class="margin">
+                <label>Ключевые навыки</label>
+                <input class="form-control vac-subjects" type="text" placeholder="Ключевые навыки через ,"/>
             </p>
             <p class="margin">
                 <label>Вес опыта, [0..1]</label>

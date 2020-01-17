@@ -3,32 +3,17 @@
 const cls = { 'management': 'badge-primary', 'skills': 'badge-warning', 'subject': 'badge-success' }
 
 $(document).ready(() => {
-    saveFirstPhase()
-    saveSecondPhase()
-
+    const docId = $('#input-doc-id').val()
     const words = JSON.parse($('#input-words').val())
     const subjects = JSON.parse($('#input-subjects').val())
     const skills = JSON.parse($('#input-skills').val())
     const orderedWords = JSON.parse($('#input-ordered-words').val())
 
-    const stats = selectSubjects($('#doc-box'), subjects, words, cls['subject'])
-    // Отображаем статистику.
-    let statsHtml = ''
-    let total = 0
-    for (let i = 0; i < stats.length; i++) {
-        statsHtml += ('<p>Термин: ' + stats[i].word + '</p>')
-        statsHtml += ('<p>Класс(ы): ' + stats[i].class.join(', ') + '</p>')
-        statsHtml += ('<p>Количество: ' + stats[i].count + '</p>')
-        statsHtml += ('<hr/>')
-        total += stats[i].count
-    }
+    const stats = selectSubjects($('#doc-box'), subjects, words, cls['subject'], docId)
+    displayStats(stats)
 
-    statsHtml += ('<p><strong>Всего терминов: ' + total +  '</strong></p>')
-    for (let i = 0; i < stats.length; i++) { 
-        statsHtml += ('<p><strong>' + stats[i].class.join(', ') + ': ' + (stats[i].count / total * 100).toString() + '%' + '</strong></p>')
-    }
-
-    $('#doc-stats').html(statsHtml)
+    saveFirstPhase()
+    saveSecondPhase(stats)
 
     findSkills($('#doc-box'), skills, words, cls['skills'], orderedWords)
     findExecutive($('#doc-box'), cls['management'])
@@ -181,7 +166,7 @@ const removeUnderscore = (where, cls, txt, words) => {
 }
 
 // Поиск и выделение предметных областей.
-const selectSubjects = (where, subjects, words, cls) => {
+const selectSubjects = (where, subjects, words, cls, docId) => {
     let foundSubjects = []
 
     // 1. Поиск предметных областей.
@@ -207,6 +192,7 @@ const selectSubjects = (where, subjects, words, cls) => {
             })
 
             stats.push({
+                docId,
                 word: word,
                 class: defineClass(subjects, word),
                 count: words[word].length
@@ -217,12 +203,32 @@ const selectSubjects = (where, subjects, words, cls) => {
     return stats
 }
 
+const displayStats = (stats) => {
+    // Отображаем статистику по документу.
+    let statsHtml = ''
+    let total = 0
+    for (let i = 0; i < stats.length; i++) {
+        statsHtml += ('<p>Термин: ' + stats[i].word + '</p>')
+        statsHtml += ('<p>Класс(ы): ' + stats[i].class.map((v) => {return v.name}).join(', ') + '</p>')
+        statsHtml += ('<p>Количество: ' + stats[i].count + '</p>')
+        statsHtml += ('<hr/>')
+        total += stats[i].count
+    }
+
+    statsHtml += ('<p><strong>Всего терминов: ' + total +  '</strong></p>')
+    for (let i = 0; i < stats.length; i++) { 
+        statsHtml += ('<p><strong>' + stats[i].class.join(', ') + ': ' + (stats[i].count / total * 100).toString() + '%' + '</strong></p>')
+    }
+
+    $('#doc-stats').html(statsHtml)
+}
+
 const defineClass = (subjects, sbj) => {
     let classes = []
     
     for (let i = 0; i < subjects.length; i++) {
         if (subjects[i].name === sbj) {
-            classes.push(subjects[i].class)
+            classes.push({name: subjects[i].class})
         }
     }
 
@@ -455,7 +461,7 @@ const generateList = (data, cls) => {
 }
 
 // Фаза 2. Отправляем пользовательские данные и сохраняем их.
-const saveSecondPhase = () => {
+const saveSecondPhase = (stats) => {
     $('#save-second-phase').on('click', (e) => {
         e.preventDefault()
         $('.preloader').show()
@@ -482,7 +488,7 @@ const saveSecondPhase = () => {
             })
 
             toAdd.push({
-                name, skills, subjects
+                name, skills, subjects, stats
             })
         }
 
@@ -513,7 +519,7 @@ const saveSecondPhase = () => {
             })
 
             toUpdate.push({
-                name, skills, subjects, checked
+                name, skills, subjects, checked, stats
             })
         }
 

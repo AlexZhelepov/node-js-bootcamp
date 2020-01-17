@@ -24,6 +24,7 @@ $(document).ready(() => {
         const vacs = []
 
         const $vacNames = $('#vac-template .vac-name')
+        const $vacSubjects = $('#vac-template .vac-subjects')
         const $vacExp = $('#vac-template .vac-exp')
         const $vacWeightExp = $('#vac-template .vac-weight-exp')
         const $vacWeightSkills = $('#vac-template .vac-weight-skills')
@@ -33,7 +34,8 @@ $(document).ready(() => {
                 name: $(v).val(),
                 requiredExperienceYears: $vacExp.eq(i).val(),
                 weightExperience: $vacWeightExp.eq(i).val(),
-                weightSkill: $vacWeightSkills.eq(i).val()
+                weightSkill: $vacWeightSkills.eq(i).val(),
+                subjects: $vacSubjects.eq(i).val()
             })
         })
 
@@ -70,6 +72,7 @@ $(document).ready(() => {
         const vacs = []
 
         const $vacNames = $('#vacancies-group-' + id + ' .vac-name')
+        const $vacSubjects = $('#vacancies-group-' + id + ' .vac-subjects')
         const $vacExp = $('#vacancies-group-' + id + ' .vac-exp')
         const $vacWeightExp = $('#vacancies-group-' + id + ' .vac-weight-exp')
         const $vacWeightSkills = $('#vacancies-group-' + id + ' .vac-weight-skills')
@@ -79,7 +82,8 @@ $(document).ready(() => {
                 name: $(v).val(),
                 requiredExperienceYears: $vacExp.eq(i).val(),
                 weightExperience: $vacWeightExp.eq(i).val(),
-                weightSkill: $vacWeightSkills.eq(i).val()
+                weightSkill: $vacWeightSkills.eq(i).val(),
+                subjects: $vacSubjects.eq(i).val()
             })
         })
 

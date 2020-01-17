@@ -1,7 +1,28 @@
 <h3>
+  Классификации сотрудников
+</h3>
+<table>
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ФИО</th>
+      <th scope="col">Классификация</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each strStats}}
+      <tr>
+        <td>{{@index}}</td>
+        <td>{{this.name}}</td>
+        <td>{{this.stats}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<h3>
   База работников и их компетенций
 </h3>
-
 <table class="table">
   <thead>
     <tr>

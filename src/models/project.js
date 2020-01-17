@@ -29,6 +29,10 @@ const projectSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
+        subjects: {
+            type: String,
+            required: true
+        },
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'UserInfo'
