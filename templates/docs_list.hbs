@@ -6,7 +6,7 @@
       <th scope="col">Обновлен</th>
       <th scope="col">Создан</th>
       <th scope="col">Статус обработки</th>
-      <th scope="col">Использовать для обучения</th>>
+      <th scope="col">Использовать для обучения</th>
     </tr>
   </thead>
   <tbody>
@@ -28,13 +28,13 @@
                 {{else}}
                     <p>
                         <a href="/handle/{{this._id}}" class="btn btn-primary">
-                            Обработать
+                            Классифицировать
                         </a>
                     </p>
                 {{/if}}
             </td>
-            <td>
-                <a href="/learn/{{this._id}}" class="btn btn-primary">Обучить</a>
+            <td style="min-width:300px">
+                <a href="/learn/{{this._id}}" class="btn btn-primary">Добавить в обучающую выборку</a>
             </td>
         </tr>
       {{/each}}

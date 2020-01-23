@@ -182,6 +182,9 @@ const selectSubjects = (where, subjects, words, cls, docId) => {
     let stats = []
     for (word in words) {
         if (foundSubjects.includes(word)) {
+
+            // TODO!!!
+
             underscoreWords($(where), cls, {
                 norm: word,
                 variants: words[word]
@@ -217,7 +220,7 @@ const displayStats = (stats) => {
 
     statsHtml += ('<p><strong>Всего терминов: ' + total +  '</strong></p>')
     for (let i = 0; i < stats.length; i++) { 
-        statsHtml += ('<p><strong>' + stats[i].class.join(', ') + ': ' + (stats[i].count / total * 100).toString() + '%' + '</strong></p>')
+        statsHtml += ('<p><strong>' + stats[i].class.map(v => {return v.name}).join(', ') + ': ' + ((stats[i].count / total * 100).toFixed(2)).toString() + '%' + '</strong></p>')
     }
 
     $('#doc-stats').html(statsHtml)
@@ -237,7 +240,6 @@ const defineClass = (subjects, sbj) => {
 
 const findSkills = (where, skills, words, cls, orderedWords) => {
     let foundSkills = []
-
     // orderedWords
     // { raw: '', norm: '' }
 

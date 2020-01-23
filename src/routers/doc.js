@@ -73,7 +73,7 @@ router.get('/handle/:id', async (req, res) => {
                     raw_words = raw_words.concat([...data.matchAll(/((?<=\})(.*?)(?=\{))/g)])
 
                     let words = []
-                    
+
                     // Слова берутся парами: как в тексте - нормализованное.
                     normal_words.forEach((v, i) => {
                         if (v[0].includes('|')) {
@@ -84,10 +84,19 @@ router.get('/handle/:id', async (req, res) => {
                             }))
                         }
                         else {
-                            words.push({
-                                raw: raw_words[i][0],
-                                norm: v[0]
-                            })
+                            // Костыль с какой-то магией.
+                            if (Array.isArray(raw_words[i])) {
+                                words.push({
+                                    raw: raw_words[i][0],
+                                    norm: v[0]
+                                })
+                            }
+                            else {
+                                words.push({
+                                    raw: raw_words[i],
+                                    norm: v[0]
+                                })
+                            }
                         }
                     })
 
@@ -171,6 +180,8 @@ router.get('/learn/:id', async (req, res) => {
                 }
 
                 let terms = []
+                let distinctTerms = []
+
                 const classes = ['']
                 const subjects = await Subject.find({})
 
@@ -187,7 +198,12 @@ router.get('/learn/:id', async (req, res) => {
                     if (json.analysis) {
                         for (let i = 0; i < json.analysis.length; i++) {
                             if (json.analysis[i].gr[0] === 'S') {
-                                terms.push({term: json.analysis[i].lex, classes})
+                                if (json.analysis[i].lex.length > 3) {
+                                    if (!distinctTerms.includes(json.analysis[i].lex)) {
+                                        terms.push({term: json.analysis[i].lex, classes})
+                                        distinctTerms.push(json.analysis[i].lex)
+                                    }
+                                }
                             }    
                         }
                     }
