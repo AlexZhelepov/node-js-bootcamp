@@ -222,6 +222,8 @@ const makeChange = (team, changedIndices, availableEmployees) => {
 
 // Генетический алгоритм.
 const geneticAlgorithm = (project, employees, teamNumber = 30, changeCount = 2, eliteCount = 1, iterations = 30) => {
+    changeCount = project.vacancies.length < changeCount ? project.vacancies.length : changeCount
+    
     // Создание команд.
     let teams = []
     let epoch = 0
