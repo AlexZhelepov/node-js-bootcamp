@@ -24,12 +24,13 @@ $(document).ready(() => {
 })
 
 const readGeneticSettings = () => {
+    const teamMut = $('#team-mut-type').prop('checked')
     const teamCount = $('#team-count').val()
     const mutCount = $('#mut-count').val()
     const eliteCount = $('#elite-count').val()
     const epochCount = $('#epoch-count').val()
 
     return {
-        teamCount, mutCount, eliteCount, epochCount
+        teamMut, teamCount, mutCount, eliteCount, epochCount
     }
 }

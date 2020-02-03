@@ -84,7 +84,7 @@ router.post('/projects/form/:id', async (req, res) => {
         const project = await Project.findById(_id)
         const settings = req.body
 
-        const team = genetic.geneticAlgorithm(project, employees, settings.teamCount, settings.mutCount, settings.eliteCount, settings.epochCount)
+        const team = genetic.geneticAlgorithm(project, employees, settings.teamCount, settings.mutCount, settings.eliteCount, settings.epochCount, settings.teamMut)
         
         // Заполняем вакансии проекта исполнителями.
         let users = []
